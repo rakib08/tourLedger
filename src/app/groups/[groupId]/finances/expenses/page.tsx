@@ -14,10 +14,9 @@ export default async function TotalExpensesPage({
 }) {
   const { groupId } = await params;
   const query = await searchParams;
-  const d = await getFinanceContext(groupId);
+  const [d, supabase] = await Promise.all([getFinanceContext(groupId), createClient()]);
   const requestedPage = Number.parseInt(query.page || '1', 10);
   const page = Number.isFinite(requestedPage) ? Math.max(1, requestedPage) : 1;
-  const supabase = await createClient();
   const { data: rows, count } = await supabase
     .from('financial_transactions')
     .select('id, title, description, amount_minor, category_id, occurred_at, status', { count: 'exact' })

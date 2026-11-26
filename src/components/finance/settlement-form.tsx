@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from 'react';
 import { useFormStatus } from 'react-dom';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { finalizeSettlementAction, type FinanceActionState } from '@/app/groups/finance-actions';
 import { formatMoney } from '@/lib/money';
 
@@ -10,7 +11,7 @@ const field = 'mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  return <button disabled={pending} className="min-h-12 w-full rounded-xl bg-[#10243a] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60">{pending ? 'Finalizing settlement…' : 'Finalize settlement permanently'}</button>;
+  return <button disabled={pending} className="min-h-12 w-full rounded-xl bg-[#10243a] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60">{pending ? <span className="inline-flex items-center justify-center gap-2"><LoadingSpinner size={17} className="text-white"/>Finalizing settlement…</span> : 'Finalize settlement permanently'}</button>;
 }
 
 export function SettlementForm({

@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import {
   acceptInviteAction,
   addGroupMemberAction,
@@ -14,7 +15,7 @@ const initial: GroupActionState = {};
 
 function Submit({ children }: { children: string }) {
   const { pending } = useFormStatus();
-  return <button disabled={pending} className="min-h-12 w-full rounded-xl bg-[#10243a] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#193956] disabled:cursor-not-allowed disabled:opacity-60">{pending ? 'Please wait…' : children}</button>;
+  return <button disabled={pending} className="min-h-12 w-full rounded-xl bg-[#10243a] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#193956] disabled:cursor-not-allowed disabled:opacity-60">{pending ? <span className="inline-flex items-center justify-center gap-2"><LoadingSpinner size={17} className="text-white"/>Please wait…</span> : children}</button>;
 }
 
 function Feedback({ state }: { state: GroupActionState }) {

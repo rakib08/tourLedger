@@ -48,7 +48,9 @@ export default async function DashboardPage() {
         .maybeSingle(),
       supabase
         .from("tour_groups")
-        .select("id, name, destination, start_date, end_date, status, approval_status")
+        .select(
+          "id, name, destination, start_date, end_date, status, approval_status",
+        )
         .order("created_at", { ascending: false }),
     ]);
 
@@ -64,7 +66,7 @@ export default async function DashboardPage() {
     .join("");
 
   return (
-    <main className="min-h-screen bg-[#f5f7fa] pb-28 sm:pb-10">
+    <main className="flex min-h-[100dvh] flex-col bg-[#f5f7fa] pb-28 sm:pb-10">
       <header className="app-safe-top border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
           <Link href="/dashboard" className="flex items-center gap-3">
@@ -73,16 +75,19 @@ export default async function DashboardPage() {
             </span>
             <span className="text-lg font-bold text-[#10243a]">TourLedger</span>
           </Link>
+
           <div className="flex items-center gap-3">
             <div className="grid size-9 place-items-center rounded-full bg-[#e9eef5] text-xs font-bold text-[#10243a]">
               {initials || "TL"}
             </div>
+
             <div className="hidden sm:block">
               <p className="text-sm font-semibold text-slate-800">
                 {displayName}
               </p>
               <p className="text-xs text-slate-500">{user.email}</p>
             </div>
+
             <form action={signOutAction}>
               <button className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                 Sign out
@@ -92,10 +97,10 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6 sm:py-9">
+      {/* Main page content */}
+      <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-1 sm:px-6 sm:py-9">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="text-sm text-slate-500">Your workspace</p>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-[#10243a] sm:text-3xl">
               Hello, {displayName.split(" ")[0]}
             </h1>
@@ -103,9 +108,6 @@ export default async function DashboardPage() {
               Manage your trips and keep shared finances transparent.
             </p>
           </div>
-          <span className="inline-flex items-center gap-2 self-start rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600">
-            <Users size={15} /> Multi-group account
-          </span>
         </div>
 
         <section className="mt-8">
@@ -118,13 +120,15 @@ export default async function DashboardPage() {
                 Groups you manage or have joined.
               </p>
             </div>
+
             <Link
               href="/groups/new"
               className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#10243a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#193956]"
             >
-              <Plus size={16} /> Create group
+              <Plus size={16} /> Create Group
             </Link>
           </div>
+
           {groupsError ? (
             <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-800">
               The group list could not be loaded. Confirm that the database
@@ -143,30 +147,43 @@ export default async function DashboardPage() {
                   approval_status: string;
                 }) => (
                   <Link
-                    href={group.approval_status === "approved" ? `/groups/${group.id}` : "/dashboard"}
+                    href={
+                      group.approval_status === "approved"
+                        ? `/groups/${group.id}`
+                        : "/dashboard"
+                    }
                     key={group.id}
-                    className="block rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition sm:p-5 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
+                    className="block rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md sm:p-5"
                   >
                     <div className="flex items-start justify-between">
                       <span className="grid size-10 place-items-center rounded-xl bg-[#edf2f7] text-[#10243a]">
                         <CalendarDays size={19} />
                       </span>
-                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium capitalize text-slate-600">
+
+                      <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium capitalize text-emerald-700">
                         {group.status}
                       </span>
                     </div>
+
                     <h3 className="mt-4 font-bold text-slate-900">
                       {group.name}
                     </h3>
+
                     <p className="mt-1 text-sm text-slate-500">
                       {group.destination || "Destination not set"}
                     </p>
+
                     <p className="mt-4 text-xs text-slate-400">
                       {group.start_date || "Date not set"}
                       {group.end_date ? ` – ${group.end_date}` : ""}
                     </p>
+
                     <p className="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-500">
-                      {group.approval_status === "approved" ? "Open group finances and view the shared ledger." : group.approval_status === "pending" ? "Your request is awaiting Super Admin approval." : "This group request was rejected."}
+                      {group.approval_status === "approved"
+                        ? "Open group finances and view the shared ledger."
+                        : group.approval_status === "pending"
+                          ? "Your request is awaiting Super Admin approval."
+                          : "This group request was rejected."}
                     </p>
                   </Link>
                 ),
@@ -177,13 +194,16 @@ export default async function DashboardPage() {
               <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-[#edf2f7] text-[#10243a]">
                 <Plus size={25} />
               </span>
+
               <h3 className="mt-4 text-lg font-bold text-slate-900">
                 Your First Trip Starts Here
               </h3>
+
               <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
                 Create a group to organize members, invitations, contributions
                 and shared trip expenses.
               </p>
+
               <Link
                 href="/groups/new"
                 className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#10243a] px-4 py-2.5 text-sm font-semibold text-white"
@@ -195,18 +215,26 @@ export default async function DashboardPage() {
         </section>
       </div>
 
-      <footer className="mt-auto pb-4 pt-4 text-center">
+      {/* Footer stays at the bottom, just above bottom navigation */}
+      <footer className="mt-auto px-4 pb-3 pt-4 text-center">
         <p className="text-xs text-slate-400">
           © {new Date().getFullYear()} TourLedger. All rights reserved.
         </p>
+
         <p className="mt-1 text-xs text-slate-500">
           Developed by{" "}
-          <span className="font-semibold text-[#10243a]">Rakib Uddin</span>
+          <Link
+            href="https://www.linkedin.com/in/rakib-uddin-r8/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-[#10243a] transition-colors hover:text-[#c49a45] hover:underline"
+          >
+            Rakib Uddin
+          </Link>
         </p>
       </footer>
 
-      <ContextBottomNav mode="dashboard" />
-
+      {/* Bottom navigation - render only once */}
       <ContextBottomNav mode="dashboard" />
     </main>
   );

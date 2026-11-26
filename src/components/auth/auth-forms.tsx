@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useActionState } from 'react';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import {
   requestPasswordResetAction,
   signInAction,
@@ -36,8 +37,8 @@ function Field({ label, name, type = 'text', placeholder, autoComplete, required
   );
 }
 
-function SubmitButton({ children }: { children: string }) {
-  return <button type="submit" className="w-full rounded-xl bg-[#10243a] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#193956] focus:outline-none focus:ring-2 focus:ring-[#d6a84b] focus:ring-offset-2">{children}</button>;
+function SubmitButton({ children, pending = false }: { children: string; pending?: boolean }) {
+  return <button type="submit" disabled={pending} className="w-full rounded-xl bg-[#10243a] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#193956] focus:outline-none focus:ring-2 focus:ring-[#d6a84b] focus:ring-offset-2 disabled:opacity-70"><span className="inline-flex items-center justify-center gap-2">{pending && <LoadingSpinner size={17} className="text-white"/>}{children}</span></button>;
 }
 
 export function SignInForm({ next = '/dashboard' }: { next?: string }) {
@@ -48,7 +49,7 @@ export function SignInForm({ next = '/dashboard' }: { next?: string }) {
     <Field label="Password" name="password" type="password" placeholder="Your password" autoComplete="current-password"/>
     <div className="flex justify-end"><Link href="/forgot-password" className="text-sm font-medium text-[#10243a] hover:underline">Forgot password?</Link></div>
     <Feedback state={state}/>
-    <SubmitButton>{pending ? 'Signing in…' : 'Sign in'}</SubmitButton>
+    <SubmitButton pending={pending}>{pending ? 'Signing in…' : 'Sign in'}</SubmitButton>
   </form>;
 }
 
@@ -60,7 +61,7 @@ export function SignUpForm({ next = '/dashboard' }: { next?: string }) {
     <Field label="Email address" name="email" type="email" placeholder="you@example.com" autoComplete="email"/>
     <Field label="Password" name="password" type="password" placeholder="At least 8 characters" autoComplete="new-password"/>
     <Feedback state={state}/>
-    <SubmitButton>{pending ? 'Creating account…' : 'Create account'}</SubmitButton>
+    <SubmitButton pending={pending}>{pending ? 'Creating account…' : 'Create account'}</SubmitButton>
   </form>;
 }
 
@@ -69,7 +70,7 @@ export function ForgotPasswordForm() {
   return <form action={action} className="space-y-5">
     <Field label="Email address" name="email" type="email" placeholder="you@example.com" autoComplete="email"/>
     <Feedback state={state}/>
-    <SubmitButton>{pending ? 'Sending link…' : 'Send reset link'}</SubmitButton>
+    <SubmitButton pending={pending}>{pending ? 'Sending link…' : 'Send reset link'}</SubmitButton>
   </form>;
 }
 
@@ -79,6 +80,6 @@ export function UpdatePasswordForm() {
     <Field label="New password" name="password" type="password" placeholder="At least 8 characters" autoComplete="new-password"/>
     <Field label="Confirm new password" name="confirmPassword" type="password" placeholder="Enter it again" autoComplete="new-password"/>
     <Feedback state={state}/>
-    <SubmitButton>{pending ? 'Updating password…' : 'Update password'}</SubmitButton>
+    <SubmitButton pending={pending}>{pending ? 'Updating password…' : 'Update password'}</SubmitButton>
   </form>;
 }
